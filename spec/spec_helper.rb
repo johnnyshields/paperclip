@@ -22,6 +22,8 @@ ActiveRecord::Base.logger = Logger.new(File.dirname(__FILE__) + "/debug.log")
 ActiveRecord::Base.establish_connection(config['test'])
 Paperclip.options[:logger] = ActiveRecord::Base.logger
 
+I18n.load_path += Dir.glob(File.join(ROOT, 'lib', 'paperclip', 'locales', '*.{rb,yml}'))
+
 Dir[File.join(ROOT, 'spec', 'support', '**', '*.rb')].each{|f| require f }
 
 Rails = FakeRails.new('test', Pathname.new(ROOT).join('tmp'))

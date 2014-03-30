@@ -15,6 +15,11 @@ module Paperclip
       end
     end
 
+    initializer 'paperclip.i18n' do |app|
+      locale_path = Dir.glob(File.dirname(__FILE__) + "/locales/*.{rb,yml}")
+      I18n.load_path += locale_path unless I18n.load_path.include?(locale_path)
+    end
+
     rake_tasks { load "tasks/paperclip.rake" }
   end
 
