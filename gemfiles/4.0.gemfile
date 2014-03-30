@@ -8,6 +8,7 @@ gem "activerecord-jdbcsqlite3-adapter", :platforms=>:jruby
 gem "rubysl", :platforms=>:rbx
 gem "racc", :platforms=>:rbx
 gem "rails", "~> 4.0.0"
+gem "mongoid", "~> 4.0.0.beta1"
 gem "paperclip", :path=>"../"
 
 gemspec :path=>"../"
