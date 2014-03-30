@@ -16,7 +16,7 @@ module Paperclip
       define_setter
       define_query
       register_new_attachment
-      add_active_record_callbacks
+      add_active_model_callbacks
       add_paperclip_callbacks
       add_required_validations
     end
@@ -84,11 +84,11 @@ module Paperclip
         :if => ->(instance){ instance.send(name).dirty? }
     end
 
-    def add_active_record_callbacks
+    def add_active_model_callbacks
       name = @name
       @klass.send(:after_save) { send(name).send(:save) }
       @klass.send(:before_destroy) { send(name).send(:queue_all_for_delete) }
-      @klass.send(:after_commit, :on => :destroy) { send(name).send(:flush_deletes) }
+      # after_destroy behavior differs by ORM; refer to ORM adapters
     end
 
     def add_paperclip_callbacks

@@ -31,9 +31,23 @@ module Paperclip
       Cocaine::CommandLine.new(cmd, arguments, local_options).run(interpolation_values)
     end
 
-    # Find all instances of the given Active Record model +klass+ with attachment +name+.
+    # Find all instances of the given model +klass+ with attachment +name+.
     # This method is used by the refresh rake tasks.
     def each_instance_with_attachment(klass, name)
+      if class_is_mongoid?(klass)
+        each_mongoid_with_attachment(klass, name)
+      else
+        each_activerecord_with_attachment(klass, name)
+      end
+    end
+
+    def each_mongoid_with_attachment(klass, name)
+      class_for(klass).unscoped.where("#{name}_file_name" => {:$exists => true}).to_a.map do |instance|
+        yield(instance)
+      end
+    end
+
+    def each_activerecord_with_attachment(klass, name)
       class_for(klass).unscoped.where("#{name}_file_name IS NOT NULL").find_each do |instance|
         yield(instance)
       end
@@ -47,6 +61,10 @@ module Paperclip
           klass.const_missing(partial_class_name)
         end
       end
+    end
+
+    def class_is_mongoid?(class_name)
+      defined?(::Mongoid::Document) && class_for(class_name) < ::Mongoid::Document
     end
 
     def reset_duplicate_clash_check!
