@@ -15,7 +15,7 @@ module Paperclip
       end
 
       def aws_sdk_v1?
-        defined?(::AWS) && aws_sdk_version < "2"
+        defined?(::AWS::VERSION) && aws_sdk_version < "2"
       end
 
       def warn_aws_sdk_v1

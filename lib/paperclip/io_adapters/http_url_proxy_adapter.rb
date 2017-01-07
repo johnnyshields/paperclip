@@ -1,5 +1,10 @@
 module Paperclip
   class HttpUrlProxyAdapter < UriAdapter
+    def self.register
+      Paperclip.io_adapters.register self do |target|
+        String === target && target =~ Paperclip::HttpUrlProxyAdapter::REGEXP
+      end
+    end
 
     REGEXP = /\Ahttps?:\/\//
 
@@ -8,8 +13,4 @@ module Paperclip
     end
 
   end
-end
-
-Paperclip.io_adapters.register Paperclip::HttpUrlProxyAdapter do |target|
-  String === target && target =~ Paperclip::HttpUrlProxyAdapter::REGEXP
 end

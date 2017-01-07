@@ -1,5 +1,11 @@
 module Paperclip
   class StringioAdapter < AbstractAdapter
+    def self.register
+      Paperclip.io_adapters.register self do |target|
+        StringIO === target
+      end
+    end
+
     def initialize(target)
       @target = target
       cache_current_values
@@ -28,6 +34,4 @@ module Paperclip
   end
 end
 
-Paperclip.io_adapters.register Paperclip::StringioAdapter do |target|
-  StringIO === target
-end
+Paperclip::StringioAdapter.register

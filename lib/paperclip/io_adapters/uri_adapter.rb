@@ -1,8 +1,14 @@
-require 'open-uri'
+require "open-uri"
 
 module Paperclip
   class UriAdapter < AbstractAdapter
     attr_writer :content_type
+
+    def self.register
+      Paperclip.io_adapters.register self do |target|
+        target.is_a?(URI)
+      end
+    end
 
     def initialize(target)
       @target = target
@@ -29,9 +35,9 @@ module Paperclip
     end
 
     def filename_from_content_disposition
-      if @content.meta.has_key?("content-disposition")
-        @content.meta["content-disposition"].
-          match(/filename="([^"]*)"/)[1]
+      if @content.meta.key?("content-disposition")
+        matches = @content.meta["content-disposition"].match(/filename="([^"]*)"/)
+        matches[1] if matches
       end
     end
 
@@ -48,7 +54,7 @@ module Paperclip
     end
 
     def copy_to_tempfile(src)
-      while data = src.read(16*1024)
+      while data = src.read(16 * 1024)
         destination.write(data)
       end
       src.close
@@ -56,8 +62,4 @@ module Paperclip
       destination
     end
   end
-end
-
-Paperclip.io_adapters.register Paperclip::UriAdapter do |target|
-  target.kind_of?(URI)
 end

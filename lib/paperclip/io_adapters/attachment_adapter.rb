@@ -1,5 +1,11 @@
 module Paperclip
   class AttachmentAdapter < AbstractAdapter
+    def self.register
+      Paperclip.io_adapters.register self do |target|
+        Paperclip::Attachment === target || Paperclip::Style === target
+      end
+    end
+
     def initialize(target)
       @target, @style = case target
       when Paperclip::Attachment
@@ -31,6 +37,4 @@ module Paperclip
   end
 end
 
-Paperclip.io_adapters.register Paperclip::AttachmentAdapter do |target|
-  Paperclip::Attachment === target || Paperclip::Style === target
-end
+Paperclip::AttachmentAdapter.register

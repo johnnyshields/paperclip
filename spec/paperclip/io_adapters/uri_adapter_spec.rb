@@ -10,6 +10,11 @@ describe Paperclip::UriAdapter do
     @open_return.stubs(:meta).returns(meta)
     Paperclip::UriAdapter.any_instance.
       stubs(:download_content).returns(@open_return)
+    Paperclip::UriAdapter.register
+  end
+
+  after do
+    Paperclip.io_adapters.unregister(described_class)
   end
 
   context "a new instance" do
